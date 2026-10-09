@@ -1,81 +1,58 @@
-# xDrip4iOS
+# TxD xDrip
 
-**[Online documentation: compatibility, installation, setup and troubleshooting](https://xdrip4ios.readthedocs.io/en/latest/)**
+A stripped-down front end over the [xDrip4iOS](https://github.com/JohanDegraeve/xdripswift) engine
+that does one job: read a **Dexcom Stelo / G7 / ONE+** sensor over Bluetooth in real time and write
+every reading to **Apple Health** immediately, so apps that read Apple Health — specifically
+[Food Health TxD](https://www.aifoodlogios.com) — see glucose within minutes instead of the ~3-hour
+delay of the vendor app's Health export.
 
-xDrip4iOS (`xdripswift`) is a community-developed, open-source iOS app for displaying and managing real-time continuous glucose monitor (CGM) data. It can connect directly to a compatible CGM in **Master** mode or retrieve remote readings from an online service in **Follower** mode.
+The full xDrip4iOS interface is still there behind the **Advanced** button; the engine (Bluetooth
+transmitters, Core Data, HealthKit writer) is unmodified apart from two internal wrappers.
 
-xDrip4iOS is not related to the xDrip+ project for Android.
+## What it does
+1. Sets the defaults a bridge needs: Master mode, mg/dL, Apple Health write on.
+2. Asks for the Apple Health permission (Blood Glucose, write).
+3. Adds "Dexcom G7/ONE+/Stelo" in **Coexistence** mode — the vendor app keeps owning the sensor;
+   this app only listens to the same Bluetooth session. No pairing code, nothing changes in the
+   Stelo app.
+4. Shows a status page: connection, last reading, readings in 24 h, last Apple Health write.
 
-> [!IMPORTANT]
-> xDrip4iOS is experimental software. It is not a regulated medical device and is not approved for making treatment decisions. Never rely on it as the only source of glucose information. Use it at your own risk and confirm readings with approved equipment when necessary.
+Readings arrive every ~5 minutes with backfill. The app listens in the background
+(`bluetooth-central`, CoreBluetooth state restoration); keep it installed and don't force-quit the
+Stelo app.
 
-## Current capabilities
+## Build
+Requires Xcode (tested with Xcode 27). Create `xDripConfigOverride.xcconfig` at the repo root:
 
-### Glucose data sources
+    XDRIP_DEVELOPMENT_TEAM = <your Apple team id>
+    MAIN_APP_DISPLAY_NAME = TxD xDrip
 
-Master mode currently includes:
+Then either open `xdrip.xcodeproj`, scheme `xdrip`, and Run on your iPhone, or:
 
-- Dexcom G6, Anubis and ONE
-- Dexcom G7, ONE+ and Stelo over native Bluetooth, in Primary or Coexistence mode
-- Libre 2 and Libre 2 Plus EU sensors over direct Bluetooth
-- Compatible Libre sensors through MiaoMiao or Nano/Bubble/Bubble Mini transmitters
+    xcodebuild -project xdrip.xcodeproj -scheme xdrip -configuration Release -destination 'generic/platform=iOS' \
+      -derivedDataPath "$PWD/build/DerivedData" SYMROOT="$PWD/build/Products" OBJROOT="$PWD/build/Intermediates" \
+      -allowProvisioningUpdates build
+    xcrun devicectl device install app --device <UDID> build/Products/Release-iphoneos/xdrip.app
 
-Follower mode supports:
+(`SYMROOT`/`OBJROOT` are required: the upstream project leaves them empty.)
 
-- Nightscout, including Loop and OpenAPS/AAPS status data
-- Dexcom Share
-- Shared Calendar
-- CareLink
-- LibreLinkUp and LibreLinkUp Russia
-- Medtrum EasyView
+## Code
+- `xDrip/TxD/TxDBridgeModel.swift` — defaults, Health authorization, add-device in coexistence,
+  status polling.
+- `xDrip/TxD/TxDSimpleRootView.swift` — the wizard (Start → Apple Health → Connect → Status).
+- `xDrip/Application Delegate/XdripApp.swift` — root view swapped to the wizard.
+- `xDrip/SwiftUIViews/BluetoothPeripherals/BluetoothPeripheralDetailState.swift` — two internal
+  wrappers at the end of the file (`txdBeginScan`, `txdSetTransmitterId`).
 
-Sensor support depends on the exact model, region, transmitter firmware and whether an official CGM app must run alongside xDrip4iOS. Check the [compatibility guide](https://xdrip4ios.readthedocs.io/en/latest/#compatible-sensors) before choosing hardware or changing your setup.
+## Sensors
+- Dexcom Stelo, G7, ONE+: supported (direct Bluetooth, coexistence or primary).
+- Abbott Lingo / Libre 3: not supported for direct reading (encrypted Bluetooth); xDrip4iOS only
+  gets Libre 3 data through the LibreLinkUp cloud follower, which Lingo does not offer. Lingo users
+  stay on the Apple Health path (delayed).
 
-### App features
-
-- Adaptive iPhone and iPad Home layouts, including Clock Mode and configurable glucose chart ranges
-- Optional sensor-noise bands, reading history, treatments, local IOB and COB estimates, statistics and time-in-range views
-- Custom glucose, missed-reading, device and battery alerts, with scheduled spoken readings and trends
-- Nightscout upload and synchronization, Dexcom Share upload and Apple Health integration
-- Apple Watch app and complications
-- Home Screen and Lock Screen widgets, StandBy support, Live Activities and Dynamic Island layouts, including sensor warm-up status
-- Siri and Shortcuts access to the latest reading and Speak Glucose controls
-- Optional calendar events and contact-image displays
-- AID status displays and open-source data sharing with Loop/iAPS and Trio
-- Contextual links to the online documentation and a filterable Activity Log for troubleshooting
-- Bluetooth connection diagnostics, signal-strength history and per-device battery history
-- Bluetooth output to M5Stack and M5StickC companion displays
-
-## Requirements
-
-- An iPhone or iPad running iOS/iPadOS 16.2 or later
-- Apple Watch Series 4 or newer running watchOS 10 or later for Watch features
-- An internet connection for follower modes and cloud services
-- A compatible CGM setup for Master mode
-
-Some extensions and system features require newer hardware or iOS versions.
-
-## Availability and development
-
-xDrip4iOS is primarily a do-it-yourself app and does not have an open public TestFlight. The supported installation paths are building from source with Xcode on a Mac or creating a personal TestFlight build with GitHub Actions and Fastlane.
-
-The current project is configured for Xcode 26, Swift 5, iOS 16.2 and watchOS 10. Stable releases are maintained on `master`, while ongoing development is merged through `develop`.
-
-The maintained [installation documentation](https://xdrip4ios.readthedocs.io/en/latest/install/install/) describes the available options and requirements. The repository also contains the supporting [personal TestFlight documentation](fastlane/testflight.md).
-
-## Documentation and support
-
-- [User documentation](https://xdrip4ios.readthedocs.io/en/latest/)
-- [Installation and setup](https://xdrip4ios.readthedocs.io/en/latest/install/install/)
-- [Troubleshooting](https://xdrip4ios.readthedocs.io/en/latest/troubleshoot/)
-- [GitHub issues](https://github.com/JohanDegraeve/xdripswift/issues) for verified, reproducible bugs
-
-Please use the community support channels linked from the documentation for general setup help rather than opening a bug report or contacting maintainers privately.
-
-## Contributing
-
-Bug fixes, translations, documentation improvements and new features are welcome. Base development work on the `develop` branch and open a pull request with a clear description of the change and how it was tested.
+## Status and disclaimer
+Experimental, community software, not a medical device. Not for treatment decisions. See the
+upstream project's notes in `README-xdrip4ios-upstream.md`.
 
 ## License
-
-xDrip4iOS is released under the [GNU General Public License v3.0](LICENSE).
+GPL-3.0, same as xDrip4iOS. Upstream: https://github.com/JohanDegraeve/xdripswift

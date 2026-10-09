@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4CTXD00000000000000000B1 /* xDrip/TxD/TxDBridgeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CTXD00000000000000000A1 /* xDrip/TxD/TxDBridgeModel.swift */; };
+		4CTXD00000000000000000B2 /* xDrip/TxD/TxDSimpleRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CTXD00000000000000000A2 /* xDrip/TxD/TxDSimpleRootView.swift */; };
 		07ECB18D91AE096E637D1393 /* AlertsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 763EFF5D128BB4E856D0EB5A /* AlertsSettingsView.swift */; };
 		0A51F9C534B04BD682E1EF4D /* xDrip Tests/TherapyMetricsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E2401E5ED94424A2FEC5E8 /* xDrip Tests/TherapyMetricsTests.swift */; };
 		111352851C2F8F73108A3A62 /* CareLinkAccountState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F081BB1D5F106F950C4A8EA4 /* CareLinkAccountState.swift */; };
@@ -913,6 +915,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4CTXD00000000000000000A1 /* xDrip/TxD/TxDBridgeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xDrip/TxD/TxDBridgeModel.swift; sourceTree = SOURCE_ROOT; };
+		4CTXD00000000000000000A2 /* xDrip/TxD/TxDSimpleRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xDrip/TxD/TxDSimpleRootView.swift; sourceTree = SOURCE_ROOT; };
 		05272484BD024BDAAA341C1C /* xDrip/SwiftUIViews/Settings/TherapyMetricsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xDrip/SwiftUIViews/Settings/TherapyMetricsSettingsView.swift; sourceTree = SOURCE_ROOT; };
 		102D337E1C2160C7B03D5184 /* AlertTypesSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AlertTypesSettingsView.swift; sourceTree = "<group>"; };
 		198D44C4260A3A3300A2B4A2 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Alerts.strings; sourceTree = "<group>"; };
@@ -3032,6 +3036,8 @@
 				4A9B10162F0A000100000001 /* BgAdjustmentsView.swift */,
 				4D20C0012FF1000100000001 /* RootHomeState.swift */,
 				05272484BD024BDAAA341C1C /* xDrip/SwiftUIViews/Settings/TherapyMetricsSettingsView.swift */,
+				4CTXD00000000000000000A1 /* xDrip/TxD/TxDBridgeModel.swift */,
+				4CTXD00000000000000000A2 /* xDrip/TxD/TxDSimpleRootView.swift */,
 				5F219EC5BAAF4D5E924415FA /* xDrip/Managers/Therapy/TherapyMetricsManager.swift */,
 				4D20C0032FF1000100000001 /* RootHomeView.swift */,
 				4D20C0092FF1000100000001 /* RootTabView.swift */,
@@ -4857,6 +4863,8 @@
 				C8BA6BBA5746888144511D55 /* GlucoseChartStateManager.swift in Sources */,
 				4D20C0022FF1000100000001 /* RootHomeState.swift in Sources */,
 				C15D80D0E8DB47A6A9BE68DF /* xDrip/SwiftUIViews/Settings/TherapyMetricsSettingsView.swift in Sources */,
+				4CTXD00000000000000000B1 /* xDrip/TxD/TxDBridgeModel.swift in Sources */,
+				4CTXD00000000000000000B2 /* xDrip/TxD/TxDSimpleRootView.swift in Sources */,
 				B3DBAE6F4DF8465BBF554DE4 /* xDrip/Managers/Therapy/TherapyMetricsManager.swift in Sources */,
 				4D20C0042FF1000100000001 /* RootHomeView.swift in Sources */,
 				4D21B0022FF8000100000001 /* RootHomeChartRange.swift in Sources */,

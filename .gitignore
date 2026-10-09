@@ -1,6 +1,5 @@
 #######
 # config files, to be edited by developer 
-xDripConfigOverride.xcconfig
 
 .DS_Store
 UserInterfaceState.xcuserstate
@@ -122,3 +121,9 @@ xdripswift.wiki/
 commit.txt
 
 *.bak
+
+# TxD xDrip local-only
+build/
+XCBuildData/
+xDripConfigOverride.xcconfig
+exportOptions.plist

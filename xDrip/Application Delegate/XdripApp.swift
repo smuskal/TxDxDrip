@@ -44,7 +44,9 @@ import SwiftUI
                 ConstantsAppColors.background
                     .ignoresSafeArea()
 
-                RootTabView(
+                // TxD xDrip: wizard/status front-end by default; the full
+                // xDrip4iOS UI is behind its "Advanced" button.
+                TxDSimpleRootView(
                     stateModel: stateModel,
                     applicationCoordinator: applicationCoordinator,
                     tabTitles: tabTitles

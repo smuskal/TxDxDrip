@@ -3377,3 +3377,12 @@ extension BluetoothPeripheralDetailState: CGMBubbleTransmitterDelegate {
         refreshOnMain()
     }
 }
+
+// MARK: - TxD xDrip bridge entry points
+
+/// Internal wrappers so the TxD wizard can drive the same add-device flow the
+/// Devices screen uses. The underlying helpers live in private extensions.
+extension BluetoothPeripheralDetailState {
+    func txdBeginScan(type: BluetoothPeripheralType) { scanForBluetoothPeripheral(type: type) }
+    func txdSetTransmitterId(_ transmitterId: String) { setTransmitterId(transmitterId) }
+}

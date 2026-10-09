@@ -498,6 +498,8 @@ import AppIntents
         // setup delegate for UNUserNotificationCenter
         UNUserNotificationCenter.current().delegate = self
         
+        // TxD xDrip demo mode (App Store screenshots on the simulator): no permission prompts.
+        if TxDBridgeModel.isDemo { return }
         // check if app is allowed to send local notification and if not ask it
         UNUserNotificationCenter.current().getNotificationSettings { (notificationSettings) in
             switch notificationSettings.authorizationStatus {
