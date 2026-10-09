@@ -1345,7 +1345,7 @@ import AppIntents
             // set the app badge to 0. This will cause removal of the badge counter, but also removal of any existing notification on the screen
             if !UserDefaults.standard.showReadingInAppBadge || (!UserDefaults.standard.isMaster && UserDefaults.standard.followerBackgroundKeepAliveType == .disabled) {
                 // applicationIconBadgeNumber has been deprecated for iOS17 but as we currently have a minimum deployment target of iOS15, let's add a conditional check
-                UNUserNotificationCenter.current().setBadgeCount(0)
+                if !TxDBridgeModel.isDemo { UNUserNotificationCenter.current().setBadgeCount(0) }
             }
             
             // make sure that any pending (i.e. already scheduled in the future) missed reading notifications are removed
@@ -1924,6 +1924,8 @@ import AppIntents
     /// - parameters:
     ///     - if overrideShowReadingInNotification then badge counter will be set (if enabled off course) with function UIApplication.shared.applicationIconBadgeNumber. To be used if badge counter is  to be set eg when UserDefaults.standard.showReadingInAppBadge is changed
     private func createBgReadingNotificationAndSetAppBadge(overrideShowReadingInNotification: Bool) {
+        // TxD xDrip demo mode: badge/notification calls trigger the system permission prompt.
+        if TxDBridgeModel.isDemo { return }
         // bgReadingsAccessor should not be nil at all, but let's not create a fatal error for that, there's already enough checks for it
         guard let bgReadingsAccessor = bgReadingsAccessor else { return }
         
