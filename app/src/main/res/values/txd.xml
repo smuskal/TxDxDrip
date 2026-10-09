@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TxD xDrip wizard (not translated) -->
+    <string name="txd_title" translatable="false">TxD xDrip</string>
+    <string name="txd_subtitle" translatable="false">Stelo → Health Connect, in real time</string>
+    <string name="txd_engine" translatable="false">xDrip+ engine · GPL-3</string>
+    <string name="txd_advanced" translatable="false">Advanced</string>
+    <string name="txd_start" translatable="false">Start</string>
+    <string name="txd_continue" translatable="false">Continue</string>
+    <string name="txd_connect" translatable="false">Connect</string>
+    <string name="txd_refresh" translatable="false">Refresh</string>
+    <string name="txd_forget" translatable="false">Forget source</string>
+
+    <string name="txd_welcome_title" translatable="false">Three steps</string>
+    <string name="txd_welcome_1" translatable="false">1.  Allow writing glucose to Health Connect.</string>
+    <string name="txd_welcome_2" translatable="false">2.  Connect to your Stelo. The Stelo app can stay in charge; this app reads its readings.</string>
+    <string name="txd_welcome_3" translatable="false">3.  Leave this app installed. Readings land in Health Connect within minutes, and Food Health TxD reads them from there.</string>
+    <string name="txd_welcome_note" translatable="false">Keep the Stelo app on your phone and don\'t force-stop it. Nothing here replaces it.</string>
+
+    <string name="txd_health_title" translatable="false">Health Connect</string>
+    <string name="txd_health_body" translatable="false">Tap Allow, then turn on Blood glucose (write) in the screen that appears. This is how readings reach Food Health TxD.</string>
+    <string name="txd_hc_missing" translatable="false">Health Connect is not installed on this phone.</string>
+    <string name="txd_hc_ok" translatable="false">✓ Writing to Health Connect is allowed</string>
+    <string name="txd_hc_need" translatable="false">Permission is not granted yet.</string>
+    <string name="txd_hc_install" translatable="false">Install Health Connect</string>
+    <string name="txd_hc_allow" translatable="false">Allow Health Connect</string>
+
+    <string name="txd_connect_title" translatable="false">Connect to Stelo</string>
+    <string name="txd_connect_companion_body" translatable="false">Recommended: keep the Stelo app. This app reads each reading the Stelo app shows in its notifications. Tap Connect, then allow notification access on the next screen and pick TxD xDrip.</string>
+    <string name="txd_connect_companion" translatable="false">Connect (keep the Stelo app)</string>
+    <string name="txd_companion_need_access" translatable="false">Notification access is still off. Open the setting and enable TxD xDrip.</string>
+    <string name="txd_companion_ready" translatable="false">✓ Reading the Stelo app. Make sure Stelo notifications are on.</string>
+    <string name="txd_open_notification_access" translatable="false">Open notification access</string>
+    <string name="txd_connect_direct_body" translatable="false">Advanced: connect to the sensor directly over Bluetooth with the 4-digit pairing code from the applicator. Only one app can own the sensor, so the Stelo app must be removed first.</string>
+    <string name="txd_connect_direct" translatable="false">Direct Bluetooth (replaces the Stelo app)</string>
+    <string name="txd_direct_title" translatable="false">Direct Bluetooth</string>
+    <string name="txd_direct_msg" translatable="false">Uninstall the Stelo app, forget any DX… devices in Bluetooth settings, then enter the 4-digit pairing code printed on the sensor applicator.</string>
+    <string name="txd_direct_ready" translatable="false">✓ Direct Bluetooth set up for sensor %1$s. The first connection can take up to 6 minutes; approve the pairing request when it appears.</string>
+
+    <string name="txd_row_source" translatable="false">Source</string>
+    <string name="txd_row_connection" translatable="false">Connection</string>
+    <string name="txd_row_last" translatable="false">Last reading</string>
+    <string name="txd_row_count" translatable="false">Readings, 24 h</string>
+    <string name="txd_row_health" translatable="false">Health Connect</string>
+    <string name="txd_state_connected" translatable="false">connected</string>
+    <string name="txd_state_waiting" translatable="false">waiting for next reading</string>
+    <string name="txd_state_not_listening" translatable="false">not listening</string>
+    <string name="txd_none_yet" translatable="false">none yet</string>
+    <string name="txd_hc_row_ok" translatable="false">allowed · written on every reading</string>
+    <string name="txd_hc_row_bad" translatable="false">NOT allowed</string>
+    <string name="txd_chart_title" translatable="false">Glucose · green band 70–180</string>
+    <string name="txd_status_note" translatable="false">Keep this app installed; don\'t force-stop the Stelo app.</string>
+    <string name="txd_forget_title" translatable="false">Forget source?</string>
+    <string name="txd_forget_msg" translatable="false">Stops collecting and returns to the Connect step.</string>
+
+    <style name="TxdH1">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+    <style name="TxdBody">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+    <style name="TxdFoot">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#9A9A9E</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+    <style name="TxdPrimary">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">52dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:background">@drawable/txd_button</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="TxdSecondary">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:background">@drawable/txd_button_secondary</item>
+        <item name="android:textColor">#BF59F2</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="TxdCard">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/txd_card</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+    <style name="TxdRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+    <style name="TxdLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#9A9A9E</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="TxdValue">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">end</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="TxdChip">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+</resources>

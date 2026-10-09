@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/reminder_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/reminder_info_card"
+        android:layout_alignParentStart="true"
+
+        android:layout_alignParentTop="true" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/reminder_info_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="3dp"
+        android:animateLayoutChanges="true"
+        app:cardBackgroundColor="@color/cardview_light_background"
+        app:cardCornerRadius="5dp">
+
+        <TextView
+            android:id="@+id/reminders_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="6dp"
+            android:text="@string/snooze_done"
+            android:textColor="#666666"
+            android:textIsSelectable="false" />
+
+
+    </androidx.cardview.widget.CardView>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|right"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:onClick="newReminder"
+        android:src="@drawable/ic_add_black_36dp"
+        app:borderWidth="0dp" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/floatingsnooze"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|left"
+        app:cardBackgroundColor="@color/cardview_light_background"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/floaterText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="10"
+                    android:text="Test test 123 this is text @string/appwidget_text"
+                    android:textColor="@android:color/darker_gray" />
+
+                <ImageButton
+                    android:id="@+id/imageButton7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:minWidth="60dp"
+                    android:onClick="hideFloater"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="5dp"
+                    app:srcCompat="@android:drawable/arrow_down_float" />
+
+                <ImageButton
+                    android:id="@+id/imageButton5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:minWidth="60dp"
+                    android:onClick="undoFromFloater"
+                    android:paddingTop="5dp"
+                    app:srcCompat="@drawable/ic_undo_variant_grey600_24dp" />
+
+                <ImageButton
+                    android:id="@+id/reminderTrashButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:minWidth="60dp"
+                    android:onClick="reminderTrashButton"
+                    android:paddingTop="2dp"
+                    app:srcCompat="@android:drawable/ic_menu_delete" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="10"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_weight="1"
+
+                    android:onClick="snoozeAdjust"
+                    android:tag="15 Min"
+                    android:text="@string/button_15_min" />
+
+                <Button
+                    android:id="@+id/button11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:onClick="snoozeAdjust"
+                    android:tag="2 Hour"
+                    android:text="@string/button_2_hour" />
+
+                <Button
+                    android:id="@+id/button10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="snoozeAdjust"
+                    android:tag="1 Day"
+                    android:text="@string/button_1_day" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="snoozeAdjust"
+                    android:tag="30 min"
+                    android:text="@string/button_30_min" />
+
+                <Button
+                    android:id="@+id/button5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:onClick="snoozeAdjust"
+                    android:tag="4 Hour"
+                    android:text="@string/button_4_hour" />
+
+                <Button
+                    android:id="@+id/button4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_weight="1"
+
+                    android:onClick="snoozeAdjust"
+                    android:tag="2 Day"
+                    android:text="@string/button_2_day" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="snoozeAdjust"
+                    android:tag="1 Hour"
+                    android:text="@string/button_1_hour" />
+
+                <Button
+                    android:id="@+id/button8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:onClick="snoozeAdjust"
+                    android:tag="8 Hour"
+                    android:text="@string/button_8_hour" />
+
+                <Button
+                    android:id="@+id/button9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_weight="1"
+                    android:onClick="snoozeAdjust"
+                    android:tag="1 week"
+                    android:text="@string/button_1_week" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <GridLayout
+            android:id="@+id/remindergrid"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content">
+
+        </GridLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+</RelativeLayout>
+
+

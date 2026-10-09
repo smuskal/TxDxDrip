@@ -1,0 +1,436 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        if (getGradle().getStartParameter().getTaskRequests().toString().contains("Release]")) {
+           // println("Enabling New Relic")
+           // classpath "com.newrelic.agent.android:agent-gradle-plugin:5.27.1"
+        }
+    }
+}
+apply plugin: 'com.android.application'
+//apply from: 'token-replace.gradle'
+apply from: '../common.gradle'
+apply plugin: 'kotlin-android'
+
+if (project.file('local.gradle').exists()) {
+    apply from: 'local.gradle'
+}
+
+if (getGradle().getStartParameter().getTaskRequests().toString().contains("Release]")) {
+   /* apply plugin: 'newrelic'
+    newrelic {
+        variantMapsEnabled false
+        uploadMapsForVariant ''
+    }*/
+    apply plugin: 'com.google.android.gms.oss-licenses-plugin'
+}
+
+repositories {
+    maven {
+        url "https://raw.github.com/embarkmobile/zxing-android-minimal/mvn-repo/maven-repository/"
+    }
+    maven {
+        url "https://jitpack.io"
+    }
+    flatDir {
+        dirs  project(':app').file('libs'), project(':wear').file('libs')
+    }
+}
+
+android {
+    compileSdk 36 // TODO centralize
+
+
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == "com.android.databinding") {
+                // changes to databinding libraries can apparently result in nasty bugs on some handsets
+                // the following checks that databinding dependencies are not changed from the tested configuration
+                // 2.3.0 and 1.3.1 are from me.tatarka.bindingcollectionadapter2
+                if (!["3.1.4", "2.3.0", "1.3.1", "3.4.3", "3.6.4", "7.4.2", "8.13.1", "8.13.2"].contains(details.target.version)) {
+                    throw new GradleException("Untested databinding version: " + details.requested.group + " " + details.requested.name + "- " + details.requested.version + " - " + details.target.version)
+                }
+            }
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.foodhealth.txd.xdrip"
+        minSdkVersion 26
+        // increasing target SDK version can cause compatibility issues with Android 7+
+        // TxD xDrip: Google Play requires API 36 for new apps.
+        targetSdkVersion 36
+        // change versionCode only when downgrade should be prevented
+        // eg, when data structures are incompatible
+        versionCode 2026100901
+        versionName "1.0.0-txd"
+        buildConfigField "int", "buildVersion", generateVersionNumberString()
+        buildConfigField "String", "buildUUID", generateRandomUUID()
+        buildConfigField "long", "buildTimestamp", generateTimestamp()
+        buildConfigField "int", "targetSDK", targetSdkVersion.mApiLevel.toString()
+        //vectorDrawables.useSupportLibrary = true // broken in newer gradle versions
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        multiDexEnabled false
+
+        manifestPlaceholders = ['appAuthRedirectScheme': 'xdrip',
+                                appId: applicationId
+        ]
+    }
+
+    // The defaultConfig values above are fixed, so your incremental builds don't
+    // need to rebuild the manifest (and therefore the whole APK, slowing build times).
+    // But for release builds, it's okay. So the following script iterates through
+    // all the known variants, finds those that are "release" build types, and
+    // changes those properties to something dynamic.
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == "release") {
+            variant.outputs.each { output ->
+                output.versionNameOverride = "1.0.0-txd"
+            }
+        }
+    }
+
+    testOptions {
+        animationsDisabled = true
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+
+        }
+        unitTests.all {
+            jvmArgs '-noverify', '--add-opens=java.base/java.util=ALL-UNNAMED'
+
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        disable 'MissingTranslation'
+        disable 'ExtraTranslation'
+    }
+
+    configurations {
+        all {
+            exclude group: 'commons-logging', module: 'commons-logging'
+            exclude group: 'org.apache.httpcomponents'
+        }
+    }
+
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/NOTICE.md'
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'org/apache/http/version.properties'
+        exclude 'org/apache/http/client/version.properties'
+        //exclude 'META-INF/androidx.core_core.version'
+        exclude 'META-INF/com.android.tools/proguard/coroutines.pro'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/androidx.interpolator_interpolator.version'
+        exclude 'META-INF/androidx.core_core.version'
+        pickFirst 'org/bouncycastle/x509/CertPathReviewerMessages.properties'
+        pickFirst 'org/bouncycastle/x509/CertPathReviewerMessages_de.properties'
+
+        exclude "**/libsentry*.so" // exclude the ndk libraries we are not utilizing
+
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    signingConfigs {
+        txdRelease {
+            if (System.getenv("TXDXDRIP_RELEASE_STORE_FILE") != null) {
+                storeFile file(System.getenv("TXDXDRIP_RELEASE_STORE_FILE"))
+                storePassword System.getenv("TXDXDRIP_RELEASE_STORE_PASSWORD")
+                keyAlias System.getenv("TXDXDRIP_RELEASE_KEY_ALIAS")
+                keyPassword System.getenv("TXDXDRIP_RELEASE_KEY_PASSWORD")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
+            if (System.getenv("TXDXDRIP_RELEASE_STORE_FILE") != null) {
+                signingConfig signingConfigs.txdRelease
+            }
+        }
+        debug {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
+            testProguardFile 'proguard-debug.pro'
+            multiDexKeepProguard file('proguard-debug.pro')
+            ext.enableCrashlytics = false
+            //      applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            debuggable true
+        }
+        dev {
+            minifyEnabled false
+            shrinkResources false
+            ext.enableCrashlytics = false
+            ext.alwaysUpdateBuildId = false
+            versionNameSuffix "-debug"
+            debuggable true
+            signingConfig debug.signingConfig
+            matchingFallbacks = ['debug', 'release']
+        }
+    }
+
+    flavorDimensions "version"
+    productFlavors {
+        // When building a variant that uses this flavor, the following configurations
+        // override those in the defaultConfig block.
+        fast {
+            // To avoid using legacy multidex when building from the command line,
+            // set minSdkVersion to 21 or higher. When using Android Studio 2.3 or higher,
+            // the build automatically avoids legacy multidex when deploying to a device running
+            // API level 21 or higher—regardless of what you set as your minSdkVersion.
+            minSdkVersion 26
+            versionNameSuffix "-dev"
+            buildConfigField "int", "buildVersion", "2021010100"
+            buildConfigField "String", "buildUUID", "\"0f79a60a-5616-99be-8eb1-a430edcfd9fd\""
+            buildConfigField "long", "buildTimestamp", "1609459200L"
+            resConfigs "en", "xxhdpi"
+        }
+
+        prod {
+            // If you've configured the defaultConfig block for the release version of
+            // your app, you can leave this block empty and Gradle uses configurations in
+            // the defaultConfig block instead. You still need to create this flavor.
+            // Otherwise, all variants use the "dev" flavor configurations.
+        }
+    }
+    namespace 'com.eveningoutpost.dexdrip'
+    buildFeatures {
+        buildConfig true
+    }
+
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    // TxD xDrip: no watch app embed — wearApp project(':wear')
+    //weapApp files('../wear/build/outputs/apk/wear_release.apk')
+    implementation('com.github.nightscout:android-uploader:CORE_FOR_XDRIP') {
+        transitive = false
+    }
+
+    implementation project(':localeapi')
+    implementation project(':ipluginda')
+    implementation project(':libkeks')
+    implementation project(':libglupro')
+
+    // add missing JAXB dependencies for JDK 9+
+    if (JavaVersion.current().ordinal() >= JavaVersion.VERSION_1_9.ordinal()) {
+        annotationProcessor 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.3'
+        annotationProcessor 'org.glassfish.jaxb:jaxb-runtime:2.3.5'
+    }
+
+    // app auth implementation
+    //implementation(name: 'core-1.1.0', ext: 'aar')
+    implementation(name: 'appauth-release', ext: 'aar') {
+        exclude group: 'androidx.core', module: 'core' // fix INotificationSideChannel // android.support.v4.app
+    }
+    implementation("androidx.browser:browser:1.3.0") {
+        exclude group: 'androidx.core', module: 'core' // fix INotificationSideChannel // android.support.v4.app
+    }
+
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1"
+    implementation(name: 'ns-sdk-full-release', ext: 'aar')
+
+    //implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
+
+    implementation ('androidx.appcompat:appcompat:1.0.0')
+    implementation ('com.google.android.material:material:1.1.0')
+    implementation ('androidx.legacy:legacy-support-v13:1.0.0')
+    implementation ('androidx.recyclerview:recyclerview:1.0.0')
+    implementation ('androidx.cardview:cardview:1.0.0')
+    implementation ('androidx.preference:preference:1.0.0')
+
+    implementation ('com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+    implementation 'com.google.api-client:google-api-client-android:1.26.0'
+
+    implementation 'com.google.android.gms:play-services-auth:15.0.0'
+    implementation 'com.google.firebase:firebase-messaging:15.0.0'
+   // implementation 'com.google.android.gms:play-services-maps:15.0.0'
+    implementation 'com.google.android.gms:play-services-wearable:15.0.0'
+    implementation 'com.google.android.gms:play-services-location:15.0.0'
+    implementation "androidx.work:work-runtime:2.9.1"
+    implementation "com.google.android.gms:play-services-oss-licenses:15.0.0"
+    implementation "com.google.protobuf:protobuf-java:4.34.0"
+    implementation 'com.squareup.wire:wire-runtime:2.2.0'
+    implementation 'com.squareup.okhttp3:okhttp:5.4.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.4.0'
+    // Nocturne SDK: declares OkHttp 4.12, so it resolves up to the 5.x pinned above rather than
+    // matching it. Covered by NocturneApiClientTest / NocturneUploaderAuthTest, which drive the
+    // real (Context) constructor over MockWebServer. We exclude its gson transitive to keep
+    // xDrip's own pinned gson. Jackson is only a transitive of jackson-databind-nullable and
+    // unused at runtime on the gson path.
+    implementation('org.nightscoutfoundation:nocturne-java:0.2.4') {
+        exclude group: 'com.google.code.gson'
+        exclude group: 'com.fasterxml.jackson.core'
+    }
+    //implementation 'com.jakewharton.retrofit:retrofit1-okhttp3-client:1.1.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+    implementation 'com.squareup.moshi:moshi:1.15.2'
+    //implementation 'org.influxdb:influxdb-java:2.6'
+    implementation 'com.google.code.gson:gson:2.13.2'
+    implementation 'com.getpebble:pebblekit:4.0.1'
+    //implementation ('io.rebble.pebblekit2:client-java:1.2.0')
+    implementation ("androidx.health.connect:connect-client:1.1.0-alpha06") {
+        exclude group: 'androidx.core', module: 'core'
+    }
+   // implementation 'com.github.jamorham:amazfitcommunication:master-SNAPSHOT'
+    implementation(name: 'amazfitcommunication-master-1.0-gec53c4f-6', ext: 'aar')
+    implementation 'io.reactivex:rxjava:1.3.3'
+    implementation "com.polidea.rxandroidble2:rxandroidble:1.12.1"
+   // implementation  'io.reactivex.rxjava2:rxandroid:2.1.1'
+   // implementation  'com.jakewharton.rxrelay2:rxrelay:2.1.1'
+    implementation 'com.google.guava:guava:33.6.0-android'
+   // implementation 'com.embarkmobile:zxing-android-minimal:2.0.0@aar'
+  //  implementation 'com.embarkmobile:zxing-android-integration:2.0.0@aar'
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+    //implementation 'com.embarkmobile:zxing-android-legacy:2.0.0@aar'
+    implementation 'com.google.zxing:core:3.5.4'
+    implementation 'net.tribe7.seeds:seeds-functional:16.0.1'
+    implementation 'net.tribe7.seeds:seeds-primitives:16.0.1'
+    implementation 'me.tatarka.bindingcollectionadapter2:bindingcollectionadapter:2.2.0'
+    implementation 'me.tatarka.bindingcollectionadapter2:bindingcollectionadapter-recyclerview:2.2.0'
+    implementation 'org.slf4j:slf4j-api:1.7.30' // used by NSBarcodeConfig
+    implementation 'org.apache.commons:commons-math3:3.6.1'
+    implementation 'uk.com.robust-it:cloning:1.9.5'
+    implementation 'com.github.amlcurran.showcaseview:library:5.4.3'
+    // implementation 'com.itextpdf:itextg:5.5.9'
+    implementation 'com.github.jamorham:QR-Code-generator:d0454644af'
+    // Pebble-Trend, needs to be checked if really needed
+    //implementation 'com.android.support:multidex:1.0.1'
+    implementation 'ar.com.hjg:pngj:2.1.0'
+    //implementation 'com.bugfender.sdk:android:0.+'
+    // implementation 'com.rarepebble:colorpicker:1.7.0'
+    implementation(name: 'thread-safe-active-android-3.1.1', ext: 'aar')
+    implementation(name: 'colorpicker', ext: 'aar')
+    implementation(name: 'hellocharts-library-release', ext: 'aar')
+    implementation(name: 'search-preference', ext: 'aar')
+    implementation 'org.apache.commons:commons-text:1.3'
+    implementation 'com.google.dagger:dagger:2.25.4'
+    implementation "com.evernote:android-job:1.2.6"
+    //implementation 'com.android.support:multidex:1.0.3'
+    //implementation 'com.google.dagger:dagger-android-support:2.x' // if you use the support libraries
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.25.4'
+    implementation 'net.danlew:android.joda:2.10.6.1'
+    implementation 'org.bouncycastle:bcpkix-jdk15to18:1.68'
+
+    implementation 'io.sentry:sentry-android:4.2.0'
+
+    implementation "no.nordicsemi.android:ble:2.6.1"
+
+    testImplementation 'joda-time:joda-time:2.10.7'
+
+    // ns-sdk's NSDeviceStatus is a kotlinx.serialization @Serializable Kotlin class. Its generated
+    // synthetic constructor takes a SerializationConstructorMarker parameter, which the JVM resolves
+    // eagerly for every constructor when gson's reflective adapter asks for the no-arg one — even
+    // though gson never calls kotlinx.serialization itself. Not pulled in anywhere on :app's runtime
+    // classpath today (checked with `./gradlew :app:dependencies`), so AAPSStatusHandlerTest needs it
+    // test-scoped to even load the class under Robolectric.
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.3'
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.objenesis:objenesis:2.5.1'
+    testImplementation 'org.hamcrest:hamcrest-library:1.3'
+    testImplementation "org.robolectric:robolectric:4.16"
+    testImplementation "com.google.truth:truth:1.4.5"
+    testImplementation 'com.squareup.okhttp3:mockwebserver:5.4.0'
+    testImplementation 'com.squareup.okhttp3:okhttp-tls:5.4.0'
+
+    testImplementation 'org.mockito:mockito-inline:2.13.0'
+    testImplementation 'org.mockito:mockito-core:4.11.0'
+
+    testImplementation 'org.powermock:powermock-core:1.7.1'
+    testImplementation 'org.powermock:powermock-module-junit4:1.7.1'
+    testImplementation 'org.powermock:powermock-module-junit4-rule:1.7.1'
+    testImplementation 'org.powermock:powermock-classloading-xstream:1.7.1'
+    testImplementation 'org.powermock:powermock-api-mockito2:1.7.1'
+
+    androidTestImplementation(name: 'barista-1.7.0', ext: 'aar') {
+        exclude group: 'com.android.support'
+    }
+    // espresso, workarounds needed for correct functioning
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.1.0'
+    // add this for intent mocking support
+    //androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
+    // add this for webview testing support
+    //androidTestImplementation 'com.android.support.test.espresso:espresso-web:3.0.1'
+
+    // you will want to install the android studio lombok plugin
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor "org.projectlombok:lombok"
+
+    // use lombok in unit tests
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+tasks.withType(Test) {
+    // TranslationPlaceholderTest reads the string resources straight from the source tree, which
+    // Gradle does not otherwise know about: a changed translation would leave the test UP-TO-DATE.
+    inputs.files(fileTree("src/main/res") { include "values*/*.xml" })
+            .withPropertyName("stringResources")
+            .withPathSensitivity(PathSensitivity.RELATIVE)
+
+    testLogging {
+        exceptionFormat "full"
+        events "started", "skipped", "passed", "failed"
+        showStandardStreams true
+    }
+}
+
+apply plugin: 'com.google.gms.google-services'

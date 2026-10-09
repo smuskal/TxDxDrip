@@ -1,0 +1,975 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:installLocation="internalOnly"
+    tools:ignore="InnerclassSeparator">
+
+    <uses-sdk tools:overrideLibrary="androidx.health.connect.client, info.nightscout.sdk" />
+    <!-- To receive data from HAPP. -->
+    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" />
+    <uses-permission android:name="com.eveningoutpost.dexdrip.permissions.RECEIVE_EXTERNAL_STATUSLINE" /> <!-- To receive data from Aidex -->
+    <uses-permission android:name="com.microtechmd.cgms.aidex.permissions.RECEIVE_BG_ESTIMATE" />
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+    <uses-feature android:name="android.hardware.usb.host" />
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
+
+    <!-- Remove library-modified permissions -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        tools:node="remove" />
+
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        tools:node="remove" />
+
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+
+    <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
+    <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission-sdk-23 android:name="android.permission.READ_CONTACTS" />
+    <uses-permission-sdk-23 android:name="android.permission.SEND_SMS" />
+    <uses-permission-sdk-23 android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission-sdk-23 android:name="android.permission.READ_CALL_LOG" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.BATTERY_STATS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.MANAGE_HEALTH_DATA" />
+    <uses-permission android:name="android.permission.MANAGE_HEALTH_PERMISSIONS" />
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE" />
+    <uses-permission android:name="android.permission.health.READ_BLOOD_GLUCOSE" />
+    <uses-permission android:name="android.permission.health.WRITE_BLOOD_GLUCOSE" />
+    <uses-permission android:name="android.permission.health.READ_STEPS" />
+    <uses-permission android:name="android.permission.health.READ_EXERCISE" />
+    <uses-permission android:name="android.permission.health.READ_TOTAL_CALORIES_BURNED" />
+    <uses-permission android:name="android.permission.health.READ_WEIGHT" />
+    <uses-permission android:name="android.permission.health.READ_DISTANCE" />
+    <uses-permission android:name="android.permission.health.READ_ELEVATION_GAINED" />
+    <uses-permission android:name="android.permission.health.READ_FLOORS_CLIMBED" />
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE_VARIABILITY" />
+    <uses-permission android:name="android.permission.health.READ_HEIGHT" />
+    <uses-permission android:name="android.permission.health.READ_HYDRATION" />
+    <uses-permission android:name="android.permission.health.READ_NUTRITION" />
+    <uses-permission android:name="android.permission.health.WRITE_NUTRITION" />
+    <uses-permission android:name="android.permission.health.READ_POWER" />
+    <uses-permission android:name="android.permission.health.READ_RESTING_HEART_RATE" />
+    <uses-permission android:name="android.permission.health.READ_SLEEP" />
+    <uses-permission android:name="android.permission.health.READ_SPEED" />
+    <uses-permission android:name="android.permission.health.READ_WHEELCHAIR_PUSHES" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+
+    <uses-permission android:name="android.permission.POST_PROMOTED_NOTIFICATIONS"/>
+    <!-- Remove permission added by library -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        tools:node="remove" />
+
+    <!-- Remove permission added by library -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_CONNECT"
+        tools:node="remove" />
+
+
+    <application
+        android:name=".xdrip"
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:maxAspectRatio="2.1"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".cgm.glupro.GluProActivity"
+            android:label="@string/glupro_activity_title"
+            android:exported="false" />
+        <activity
+            android:name=".HealthPrivacy"
+            android:exported="true"
+            android:label="xDrip Privacy Policy">
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
+        </activity>
+
+        <activity-alias
+            android:name=".AndroidURationaleActivity"
+            android:exported="true"
+            android:targetActivity=".HealthPrivacy">
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
+            <!-- Permission handling for Android 14 -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity
+            android:name=".cloud.backup.BackupActivity"
+            android:exported="false"
+            android:label="Cloud Backup" />
+
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="DexDrip.db" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="41" />
+        <meta-data
+            android:name="AA_MODELS"
+            android:value="com.eveningoutpost.dexdrip.models.ActiveBgAlert,com.eveningoutpost.dexdrip.models.ActiveBluetoothDevice,com.eveningoutpost.dexdrip.models.AlertType,com.eveningoutpost.dexdrip.models.BgReading,com.eveningoutpost.dexdrip.models.BgReadingArchive,com.eveningoutpost.dexdrip.models.BgReading,com.eveningoutpost.dexdrip.models.Calibration,com.eveningoutpost.dexdrip.models.Calibration,com.eveningoutpost.dexdrip.models.CalibrationRequest,com.eveningoutpost.dexdrip.models.Sensor,com.eveningoutpost.dexdrip.models.TransmitterData,com.eveningoutpost.dexdrip.models.Treatments,com.eveningoutpost.dexdrip.models.UserError,com.eveningoutpost.dexdrip.models.UserNotification,com.eveningoutpost.dexdrip.sharemodels.models,com.eveningoutpost.dexdrip.utilitymodels.BgSendQueue,com.eveningoutpost.dexdrip.utilitymodels.CalibrationSendQueue,com.eveningoutpost.dexdrip.utilitymodels.SensorSendQueue,com.eveningoutpost.dexdrip.models.HeartRate,com.eveningoutpost.dexdrip.models.StepCounter,com.eveningoutpost.dexdrip.utilitymodels.UploaderQueue,com.eveningoutpost.dexdrip.models.BloodTest,com.eveningoutpost.dexdrip.models.Accuracy,com.eveningoutpost.dexdrip.models.Reminder,com.eveningoutpost.dexdrip.models.LibreData,com.eveningoutpost.dexdrip.models.LibreBlock,com.eveningoutpost.dexdrip.models.APStatus,com.eveningoutpost.dexdrip.models.Prediction,com.eveningoutpost.dexdrip.models.DesertSync,com.eveningoutpost.dexdrip.models.PenData,com.eveningoutpost.dexdrip.models.Libre2RawValue,com.eveningoutpost.dexdrip.models.Libre2Sensor" />
+        <meta-data
+            android:name="io.sentry.auto-init"
+            android:value="false" />
+
+        <provider
+            android:name="io.sentry.android.core.SentryInitProvider"
+            android:authorities="${applicationId}.SentryInitProvider"
+            tools:node="remove" />
+        <provider
+            android:name="io.sentry.android.core.SentryPerformanceProvider"
+            android:authorities="${applicationId}.SentryPerformanceProvider"
+            tools:node="remove" />
+        <provider
+            android:name="com.activeandroid.content.ContentProvider"
+            android:authorities="${applicationId}"
+            android:enabled="true"
+            android:exported="false" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+        <provider
+            android:name=".receiver.InfoContentProvider"
+            android:authorities="${applicationId}.contentprovider"
+            android:enabled="true"
+            android:exported="true"></provider>
+
+        <activity
+            android:name=".txd.TxdWizardActivity"
+            android:exported="true"
+            android:label="@string/app_name_launcher"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Home"
+            android:exported="true"
+            android:label="@string/app_name_launcher"
+            android:launchMode="singleTask">
+        </activity>
+        <activity
+            android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            android:exported="true"
+            tools:node="replace">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- android:path is ignored without a host, so a host is required here
+                     to stop this filter matching every xdrip:// URI (e.g. the
+                     xdrip://connect/nocturne deep link) -->
+                <data
+                    android:scheme="xdrip"
+                    android:host="callback"
+                    android:path="/tidepool" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".nocturne.NocturneConnectActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/nocturne_connect_activity_label">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="xdrip"
+                      android:host="connect"
+                      android:path="/nocturne"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".tidepool.AuthFlowIn"
+            android:exported="true" />
+        <activity
+            android:name=".BluetoothScan"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_bluetooth_scan" />
+
+        <service
+            android:name=".services.DexCollectionService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="connectedDevice|location" />
+        <service
+            android:name=".services.WifiCollectionService"
+            android:enabled="true"
+            android:exported="true" />
+        <service android:name=".services.ActivityRecognizedService" />
+        <service android:name=".services.BluetoothGlucoseMeter" />
+        <service
+            android:name=".services.broadcastservice.BroadcastService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".wearintegration.WatchUpdaterService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+
+                <data
+                    android:host="*"
+                    android:pathPrefix="/xdrip"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/nightscout"
+                    android:scheme="wear" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".wearintegration.ExternalStatusService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity
+            android:name=".tables.BgReadingTable"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/bg_readings_table" />
+        <activity
+            android:name=".tables.SensorDataTable"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/sensor_table" />
+        <activity
+            android:name=".ImportDatabaseActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/import_database" />
+        <!--
+        <activity
+            android:name=".GoogleDriveInterface"
+            android:label="Sync Data"
+            android:theme="@android:style/Theme.NoDisplay" />
+        <activity
+            android:name=".GcmActivity"
+            android:label="GCM connect"
+            android:theme="@android:style/Theme.NoDisplay" />
+        -->
+        <activity
+            android:name=".AddCalibration"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/add_calibration" />
+        <activity
+            android:name=".StartNewSensor"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_start_new_sensor" />
+        <activity
+            android:name=".NewSensorLocation"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_new_sensor_location" />
+        <activity
+            android:name=".StopSensor"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_stop_sensor" />
+        <activity
+            android:name=".BGHistory"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/glucose_history" />
+        <activity
+            android:name=".PhoneKeypadInputActivity"
+            android:label="Keypad Input"
+            android:theme="@style/PopUpKeypad" />
+        <activity
+            android:name=".NoteSearch"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/note_search" />
+
+        <receiver android:name=".AutoStart"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".utils.PowerStateReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".utils.HeadsetStateReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED" />
+                <action android:name="android.bluetooth.headset.profile.action.AUDIO_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".wearintegration.ExternalStatusBroadcastReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.eveningoutpost.dexdrip.ExternalStatusline" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".utils.DisconnectReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".utils.bt.ConnectReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".utils.framework.IncomingCallsReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".tables.CalibrationDataTable"
+            android:label="@string/calibration_data_table" />
+
+        <service android:name=".GcmListenerSvc"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".MyInstanceIDListenerService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".RegistrationIntentService"
+            android:exported="false" />
+        <!--
+        <service
+            android:name=".MyDriveEventService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.drive.events.HANDLE_EVENT" />
+            </intent-filter>
+        </service>
+        -->
+        <service
+            android:name=".services.SyncService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".importedlibraries.dexcom.SyncingService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".services.UiBasedCollector"
+            android:label="UiBasedCollector"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service> <!-- below fixes regression bugs with google play services where it crashes if play is not installed on a device -->
+        <receiver
+            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+            android:enabled="true"
+            android:exported="false"
+            tools:node="remove" />
+
+        <service
+            android:name="com.google.android.gms.measurement.AppMeasurementService"
+            android:enabled="true"
+            android:exported="false"
+            tools:node="remove" />
+
+        <activity
+            android:name=".stats.StatsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/statistics"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SnoozeActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/snooze" />
+        <activity
+            android:name=".FakeNumbers"
+            android:label="@string/title_activity_fake_numbers" />
+        <activity
+            android:name=".EditAlertActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_edit_alert" />
+        <activity
+            android:name=".DoubleCalibrationActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_double_calibration" />
+        <activity
+            android:name=".CalibrationOverride"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_calibration_override" />
+        <activity
+            android:name=".CalibrationGraph"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/calibration_graph" />
+        <activity
+            android:name=".LicenseAgreementActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/end_user_license_agreement" />
+        <activity
+            android:name=".CalibrationCheckInActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_calibration_check_in" />
+        <activity
+            android:name=".utilitymodels.pebble.watchface.InstallPebbleWatchFace"
+            android:label="@string/install_pebble_watchface" />
+        <activity
+            android:name=".utilitymodels.pebble.watchface.InstallPebbleTrendWatchFace"
+            android:label="@string/install_pebble_trend_watchface" />
+        <activity
+            android:name=".utilitymodels.pebble.watchface.InstallPebbleClassicTrendWatchface"
+            android:label="@string/install_pebble_classic_trend_watchface" />
+        <activity
+            android:name=".utilitymodels.pebble.watchface.InstallPebbleTrendClayWatchFace"
+            android:label="Install Pebble Clay Watchface" />
+        <activity
+            android:name=".utilitymodels.pebble.watchface.InstallPebbleSnoozeControlApp"
+            android:label="@string/install_pebble_snooze_control_app" />
+        <activity
+            android:name=".UsbConnectedActivity"
+            android:label="@string/title_activity_usb_connected"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />
+        </activity>
+        <activity
+            android:name=".NFCFilterX"
+            android:configChanges="orientation|screenSize"
+            android:label="xDrip NFC"
+            android:launchMode="singleTask"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/nfc_tech_list" />
+        </activity>
+        <activity
+            android:name=".NFCScanningX"
+            android:configChanges="orientation|screenSize"
+            android:label="NFC Scanning"
+            android:launchMode="singleTask" />
+
+        <service
+            android:name=".services.DexShareCollectionService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".services.G5CollectionService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".services.Ob1G5CollectionService"
+            android:enabled="true"
+            android:foregroundServiceType="connectedDevice|location" />
+        <service
+            android:name=".insulin.pendiq.PendiqService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice|location" />
+        <service
+            android:name=".cgm.medtrum.MedtrumCollectionService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice|location" />
+        <service
+            android:name=".cgm.glupro.GluProService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice|location" />
+
+        <activity
+            android:name=".ShareTest"
+            android:label="@string/title_activity_share_test" />
+        <activity
+            android:name=".utils.Preferences"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/settings"
+            android:theme="@style/OldAppTheme" />
+
+        <receiver android:name=".xDripWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/x_drip_widget_info" />
+        </receiver>
+
+        <receiver android:name=".xDripWidgetExtended"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/x_drip_widget_extended_info" />
+        </receiver>
+
+        <service
+            android:name=".WidgetUpdateService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="913d7bd9c0b910d315c3bc0e057056daf73b698e" />
+
+        <activity
+            android:name=".AlertList"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_alert_list" />
+        <activity
+            android:name=".ErrorsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_error" />
+        <activity
+            android:name=".MissedReadingActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/configure_missed_readings" />
+        <activity
+            android:name=".FollowerManagementActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/manage_followers" />
+
+        <service
+            android:name=".services.SnoozeOnNotificationDismissService"
+            android:exported="false" />
+        <service
+            android:name=".services.MissedReadingService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".utilitymodels.Notifications"
+            android:exported="false" />
+        <service
+            android:name=".utilitymodels.pebble.PebbleWatchSync"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="connectedDevice|location" />
+        <service
+            android:name=".services.DailyIntentService"
+            android:exported="false" />
+
+        <activity
+            android:name=".localeTasker.ui.EditActivity"
+            android:exported="true"
+            android:label="@string/plugin_name"
+            android:theme="@style/Theme.Locale.Dark"
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".NSClientReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="info.nightscout.client.NS_BRIDGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="info.nightscout.client.NEW_FOOD" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="info.nightscout.client.NEW_DEVICESTATUS" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="info.nightscout.client.NEW_SGV" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="info.nightscout.client.NEW_TREATMENT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="info.nightscout.client.CHANGED_TREATMENT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="info.nightscout.client.REMOVED_TREATMENT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="info.nightscout.client.NEW_PROFILE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.eveningoutpost.dexdrip.NewCalibration" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".LibreAlarmReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.eveningoutpost.dexdrip.FROM_LIBRE_ALARM" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".NSEmulatorReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
+                <action android:name="com.eveningoutpost.dexdrip.OOP2_DECODE_FARM_RESULT" />
+                <action android:name="com.eveningoutpost.dexdrip.OOP2_DECODE_BLE_RESULT" />
+                <action android:name="com.eveningoutpost.dexdrip.OOP2_BLUETOOTH_ENABLE_RESULT" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receivers.aidex.AidexReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.microtechmd.cgms.aidex.action.BgEstimate" />
+                <action android:name="com.microtechmd.cgms.aidex.action.Calibration" />
+                <action android:name="com.microtechmd.cgms.aidex.action.SensorNew" />
+                <action android:name="com.microtechmd.cgms.aidex.action.SensorRestart" />
+                <action android:name="com.microtechmd.cgms.aidex.action.SensorStop" />
+                <action android:name="com.microtechmd.cgms.aidex.action.Notification" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".watch.thinjam.io.ThinJamApiReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.eveningoutpost.dexdrip.THINJAM_API" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".LibreReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING" />
+                <action android:name="com.librelink.app.ThirdPartyIntegration.SENSOR_ACTIVATE" />
+                <action android:name="com.librelink.app.ThirdPartyIntegration.FOUND_DEVICE" />
+                <action android:name="com.librelink.app.ThirdPartyIntegration.CONNECTION_STATE" />
+                <action android:name="com.librelink.app.ThirdPartyIntegration.SENSOR_SCAN" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".utilitymodels.BroadcastSnoozeReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.eveningoutpost.dexdrip.Snooze" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".localeTasker.receiver.FireReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".utilitymodels.CompatibleApps"
+            android:exported="true">
+            <intent-filter android:priority="100">
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".utils.framework.WakeLockTrampoline" />
+        <receiver android:name=".watch.thinjam.BackgroundScanReceiver" />
+        <receiver
+            android:name=".receiver.ReminderReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service
+            android:name=".services.AlwaysOnDisplayService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service" />
+        </service>
+        <service
+            android:name=".utilitymodels.XDripDreamService"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="xDrip"
+            android:permission="android.permission.BIND_DREAM_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.dreams.DreamService" />
+
+            </intent-filter>
+
+            <meta-data
+                android:name="android.service.dream"
+                android:resource="@xml/xdrip_dream" />
+        </service>
+        <service
+            android:name=".services.PlusSyncService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".utilitymodels.UpdateActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_update" />
+        <activity
+            android:name=".utils.DisplayQRCode"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_display_qrcode"
+            android:noHistory="true" />
+        <activity
+            android:name=".utils.LibreTrendGraph"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/libre_15_minutes_graph"
+            android:noHistory="true" />
+        <activity
+            android:name=".utilitymodels.SendFeedBack"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_send_feed_back"
+            android:noHistory="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="xdrip_plus_send_developer_feedback" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".utilitymodels.SaveLogs"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_save_logs"
+            android:noHistory="true"></activity>
+        <activity android:name=".deposit.DepositActivity" />
+        <activity android:name=".utils.AndroidBarcode" />
+        <activity
+            android:name=".utils.SdcardImportExport"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/settings_on_external_storage" />
+        <activity
+            android:name=".profileeditor.BasalProfileEditor"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/basal_editor"
+            android:screenOrientation="landscape" />
+
+        <service
+            android:name=".services.DoNothingService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="connectedDevice|location" />
+
+        <activity android:name=".HelpActivity" />
+        <activity
+            android:name=".Agreement"
+            android:label="Nightscout xDrip" />
+        <activity
+            android:name=".WearVoiceActivity"
+            android:label="Simulation handheld"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gm.action.AUTO_SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.google.android.voicesearch.SELF_NOTE" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".profileeditor.ProfileEditor"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_profile_editor"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".insulin.InsulinProfileEditor"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_profile_editor"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".languageeditor.LanguageEditor"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/language_editor"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".glucosemeter.BTGlucoseMeterActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_btglucose_meter"
+            android:parentActivityName=".Home">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.eveningoutpost.dexdrip.Home" />
+        </activity>
+        <activity
+            android:name=".MegaStatus"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/system_status"
+            android:launchMode="singleTask"
+            android:parentActivityName=".Home" />
+        <activity
+            android:name=".Reminders"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".NightscoutBackfillActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan" />
+
+        <uses-library
+            android:name="com.sec.android.app.multiwindow"
+            android:required="false" />
+
+        <meta-data
+            android:name="com.sec.android.support.multiwindow"
+            android:value="true" />
+        <meta-data
+            android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W"
+            android:value="632.0dip" />
+        <meta-data
+            android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H"
+            android:value="598.0dip" />
+        <meta-data
+            android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W"
+            android:value="632.0dip" />
+        <meta-data
+            android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H"
+            android:value="598.0dip" />
+        <meta-data
+            android:name="delivery_metrics_exported_to_big_query_enabled"
+            android:value="false" />
+
+        <activity android:name=".utilitymodels.XDripDreamSettingsActivity"
+            android:exported="true"/>
+
+        <service
+            android:name=".wearintegration.Amazfitservice"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".watch.lefun.LeFunService"
+            android:foregroundServiceType="connectedDevice|location" />
+        <service
+            android:name=".watch.miband.MiBandService"
+            android:foregroundServiceType="connectedDevice|location" />
+        <service
+            android:name=".cgm.nsfollow.NightscoutFollowService"
+            android:foregroundServiceType="dataSync" />
+        <service
+            android:name=".insulin.inpen.InPenService"
+            android:foregroundServiceType="connectedDevice|location" />
+        <service
+            android:name=".cgm.sharefollow.ShareFollowService"
+            android:foregroundServiceType="dataSync" />
+        <service
+            android:name=".cgm.carelinkfollow.CareLinkFollowService"
+            android:foregroundServiceType="dataSync" />
+
+        <activity
+            android:name=".EventLogActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_error" />
+        <activity
+            android:name=".eassist.EmergencyAssistActivity"
+            android:label="@string/emergency_messages" />
+        <activity
+            android:name=".ui.activities.SelectAudioDevice"
+            android:label="@string/select_device" />
+        <activity
+            android:name=".utilitymodels.MtpConfigureActivity"
+            android:label="USB programmer" />
+        <activity
+            android:name=".ui.activities.NumberWallPreview"
+            android:exported="true"
+            android:label="@string/number_wall_config" />
+        <activity android:name=".ui.activities.TimePickerPrefActivity" />
+        <activity
+            android:name=".ui.activities.DatabaseAdmin"
+            android:label="Database Admin" />
+        <activity
+            android:name=".ui.activities.ThinJamActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="BlueJay Admin"
+            android:launchMode="singleTask" />
+
+        <service
+            android:name=".watch.thinjam.BlueJayService"
+            android:foregroundServiceType="connectedDevice|location" />
+        <service android:name=".cgm.webfollow.WebFollowService" />
+    </application>
+
+</manifest>

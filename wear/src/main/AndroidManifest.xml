@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.DELETE_PACKAGES" />
+    <uses-permission android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE" />
+    <uses-permission android:name="android.permission.MANAGE_DEVICE_ADMINS" />
+    <uses-permission
+        android:name="android.permission.DEVICE_POWER"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Declaration that this app is usable on phones with Bluetooth Low Energy. -->
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
+
+    <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:name=".xdrip"
+        android:allowBackup="false"
+        android:icon="@drawable/ic_icon"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.DeviceDefault"
+        tools:replace="android:allowBackup">
+
+        <!-- If you want your app to run on pre-22, then set required to false -->
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="false" />
+
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="DexDrip.db" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="41" />
+        <meta-data
+            android:name="AA_MODELS"
+            android:value="com.eveningoutpost.dexdrip.models.ActiveBgAlert,com.eveningoutpost.dexdrip.models.ActiveBluetoothDevice,com.eveningoutpost.dexdrip.models.AlertType,com.eveningoutpost.dexdrip.models.BgReading,com.eveningoutpost.dexdrip.models.Calibration,com.eveningoutpost.dexdrip.models.CalibrationRequest,com.eveningoutpost.dexdrip.models.PebbleMovement,com.eveningoutpost.dexdrip.models.HeartRate,com.eveningoutpost.dexdrip.models.BloodTest,com.eveningoutpost.dexdrip.models.Sensor,com.eveningoutpost.dexdrip.models.TransmitterData,com.eveningoutpost.dexdrip.models.Treatments,com.eveningoutpost.dexdrip.models.UserError,com.eveningoutpost.dexdrip.models.UserNotification,com.eveningoutpost.dexdrip.sharemodels.models,com.eveningoutpost.dexdrip.utilitymodels.BgSendQueue,com.eveningoutpost.dexdrip.utilitymodels.CalibrationSendQueue,com.eveningoutpost.dexdrip.utilitymodels.SensorSendQueue,com.eveningoutpost.dexdrip.models.LibreData,com.eveningoutpost.dexdrip.models.LibreBlock" />
+
+        <meta-data
+            tools:replace="android:value"
+            android:name="android.support.VERSION"
+            android:value="26.1.0" />
+
+        <service
+            android:name=".Home"
+            android:allowEmbedded="true"
+            android:label="@string/label_xdrip"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/watchface_graph" />
+
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".LargeHome"
+            android:allowEmbedded="true"
+            android:label="@string/label_xdrip_large"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/watchface_dark" />
+
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".BIGChart"
+            android:allowEmbedded="true"
+            android:label="@string/label_xdrip_big_chart"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/watchface_bigchart" />
+
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".CircleWatchface"
+            android:allowEmbedded="true"
+            android:label="@string/label_xdrip_circle"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/watchface_circle" />
+
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+            </intent-filter>
+        </service>
+        <service android:name=".ListenerService">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
+
+                <data
+                    android:host="*"
+                    android:scheme="wear" />
+            </intent-filter>
+            <intent-filter>
+
+                <!-- <action android:name="com.google.android.gms.wearable.BIND_LISTENER" /> -->
+                <!-- listeners receive events that match the action and data filters -->
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <!--
+                filters by Constants.EXTRA_ATTRACTIONS
+                Constants.START_ATTRACTION_PATH ('/start/attraction') and
+                Constants.START_NAVIGATION_PATH ('/start/navigation')
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/start"/>
+                -->
+                <data
+                    android:host="*"
+                    android:pathPrefix="/xdrip"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/nightscout"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/sendstatustowear"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/openwearsettings"
+                    android:scheme="wear" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.G5CollectionService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name=".services.Ob1G5CollectionService"
+            android:enabled="true" />
+        <service
+            android:name=".services.DexCollectionService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".services.DexShareCollectionService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".utilitymodels.Notifications"
+            android:exported="false" />
+        <service
+            android:name=".services.SnoozeOnNotificationDismissService"
+            android:exported="false" />
+        <service
+            android:name=".services.MissedReadingService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".services.CustomComplicationProviderService"
+            android:icon="@drawable/ic_watch_white"
+            android:label="xDrip Complication Provider"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT,LONG_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="60" />
+        </service>
+        <service android:name=".services.HeartRateService" />
+        <service
+            android:name=".services.HeartRateJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".ProcessAPKChannelDownload"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver android:name=".NSEmulatorReceiver">
+            <intent-filter>
+                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
+                <action android:name="com.eveningoutpost.dexdrip.OOP2_DECODE_FARM_RESULT" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".services.ComplicationTapBroadcastReceiver" />
+        <receiver android:name=".utils.DisconnectReceiver">
+            <intent-filter>
+                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".utils.framework.WakeLockTrampoline" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="913d7bd9c0b910d315c3bc0e057056daf73b698e" />
+
+        <activity
+            android:name=".NWPreferences"
+            android:icon="@drawable/ic_icon"
+            android:label="@string/app_name"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Simulation"
+            android:exported="true"
+            android:icon="@drawable/ic_icon"
+            android:label="@string/title_activity_simulation"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.google.android.voicesearch.SELF_NOTE" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".KeypadInputActivity"
+            android:icon="@drawable/ic_icon"
+            android:label="Keypad Treatment"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".QuickSnooze"
+            android:icon="@drawable/ic_icon"
+            android:label="@string/snooze_alert"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".LocationPermissionActivity"
+            android:label="@string/title_activity_location_permission"
+            android:launchMode="singleTop">
+
+        </activity>
+        <activity
+            android:name=".SnoozeActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/snooze" />
+        <activity
+            android:name=".MenuActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="Menu" />
+        <activity
+            android:name=".UpdateActivity"
+            />
+        <activity
+            android:name=".tables.CalibrationDataTable"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/calibration_data_table" />
+        <activity
+            android:name=".tables.BgReadingTable"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/bg_readings_table" />
+        <activity
+            android:name=".tables.SensorDataTable"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/sensor_table" />
+        <activity
+            android:name=".tables.BloodTestTable"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/bg_readings_table" />
+        <activity
+            android:name=".tables.TreatmentsTable"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/bg_readings_table" />
+        <activity android:name=".SensorPermissionActivity" />
+
+        <receiver
+
+            android:name=".ConfigReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.gmail.jamorham.NEW_CONFIG" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
