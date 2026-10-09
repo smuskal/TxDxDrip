@@ -61,8 +61,9 @@ final class TxDBridgeModel: ObservableObject {
         for i in stride(from: 24 * 12, through: 0, by: -1) {
             let t = now.addingTimeInterval(-Double(i) * 300)
             let h = Double(i) / 12
-            let base = 105 + 28 * sin(h / 24 * 2 * .pi) + 22 * max(0, sin((h - 3) / 1.5 * .pi)) + 30 * max(0, sin((h - 10) / 2 * .pi))
-            pts.append(ChartPoint(date: t, mgdl: (base + Double((i * 37) % 7) - 3).rounded()))
+            // Calm, in-range day: ~90–105 with two gentle post-meal bumps.
+            let base = 95 + 4 * sin(h / 24 * 2 * .pi) + 7 * max(0, sin((h - 3) / 2 * .pi)) + 8 * max(0, sin((h - 10) / 2.5 * .pi))
+            pts.append(ChartPoint(date: t, mgdl: (base + Double((i * 37) % 5) - 2).rounded()))
         }
         chartPoints = pts
         lastReadingValue = pts.last?.mgdl

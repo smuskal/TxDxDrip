@@ -9,6 +9,11 @@ delay of the vendor app's Health export.
 The full xDrip4iOS interface is still there behind the **Advanced** button; the engine (Bluetooth
 transmitters, Core Data, HealthKit writer) is unmodified apart from two internal wrappers.
 
+## Screenshots
+| Start | Apple Health | Connect | Status |
+|---|---|---|---|
+| ![Start](docs/screenshots/01-start.png) | ![Apple Health](docs/screenshots/02-health.png) | ![Connect](docs/screenshots/03-connect.png) | ![Status](docs/screenshots/04-status.png) |
+
 ## What it does
 1. Sets the defaults a bridge needs: Master mode, mg/dL, Apple Health write on.
 2. Asks for the Apple Health permission (Blood Glucose, write).
