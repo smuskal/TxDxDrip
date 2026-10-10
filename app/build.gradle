@@ -66,8 +66,8 @@ android {
         targetSdkVersion 36
         // change versionCode only when downgrade should be prevented
         // eg, when data structures are incompatible
-        versionCode 2026100901
-        versionName "1.0.0-txd"
+        versionCode 1
+        versionName "1.0.0"
         buildConfigField "int", "buildVersion", generateVersionNumberString()
         buildConfigField "String", "buildUUID", generateRandomUUID()
         buildConfigField "long", "buildTimestamp", generateTimestamp()
@@ -89,7 +89,7 @@ android {
     applicationVariants.all { variant ->
         if (variant.buildType.name == "release") {
             variant.outputs.each { output ->
-                output.versionNameOverride = "1.0.0-txd"
+                output.versionNameOverride = "1.0.0"
             }
         }
     }

@@ -30,8 +30,8 @@ there behind **Advanced**; the engine is unmodified apart from the items listed 
 - `AndroidManifest.xml` — launcher moved from `Home` to `TxdWizardActivity`; every component with an
   intent-filter now declares `android:exported` (required by targetSdk ≥ 31).
 - `app/build.gradle` — applicationId `com.foodhealth.txd.xdrip`, **targetSdkVersion 36** (Play
-  requires API 36 for new apps; upstream ships 26), versionCode `2026100901`, versionName
-  `1.0.0-txd`, release signing from `TXDXDRIP_RELEASE_*` env vars, wear micro-app embed removed.
+  requires API 36 for new apps; upstream ships 26), versionCode `1`, versionName `1.0.0`
+  (Play rejects a first upload with a huge versionCode), release signing from `TXDXDRIP_RELEASE_*` env vars, wear micro-app embed removed.
 - `healthconnect/HealthGamut.java` — `minimalPermissionList` reduced to glucose read/write.
 - API-34 receiver flags: `xdrip.java`, `Home.java`, `services/broadcastservice/BroadcastService.java`
   use `ContextCompat.registerReceiver(..., RECEIVER_EXPORTED)` for non-system broadcasts.
@@ -51,16 +51,20 @@ set -a; . .local/androidKeys.txt; set +a
 export TXDXDRIP_RELEASE_STORE_FILE="$(pwd)/.local/txd-xdrip-upload.jks"
 ./gradlew :app:bundleProdRelease       # app/build/outputs/bundle/prodRelease/app-prod-release.aab
 ```
-Bump `versionCode` in `app/build.gradle` for every upload (yyyymmddNN).
+Bump `versionCode` in `app/build.gradle` by 1 for every upload.
 
 ## Play upload
-First time: create the app in Play Console (name "TxD xDrip", free, app), upload the AAB once
-by hand to the internal track (that fixes the package name), then grant the Food Health publisher
-service account access to the app. After that:
+Play app exists (package `com.foodhealth.txd.xdrip`, "TxD xDrip", free). 1.0.0 (versionCode 1) is live on
+internal testing (first bundle had to be uploaded by hand; the API cannot create apps). Everything after that
+goes through `tools/play_release.py` (Android Publisher API v3, same service account + IPv4 pin as
+`fh-txd-android/android/play_upload.py`):
 ```bash
-cd ../fh-txd-android/android
-/usr/bin/python3 play_upload.py "<path to app-prod-release.aab>" internal com.foodhealth.txd.xdrip
+/usr/bin/python3 tools/play_release.py status            # bundles, internal track, testers
+/usr/bin/python3 tools/play_release.py release [aab]     # upload (optional) + roll out to internal
+/usr/bin/python3 tools/play_release.py listing           # title/descriptions + icon, feature graphic, screenshots from .local/listing/
 ```
+As of 2026-10-10 09:12 the API still returns 403 for this package although the service account has admin on
+the app; a watcher retries every 30 min and runs `release` + `listing` when access opens.
 
 ## Verified on emulator (API 35)
 Wizard end to end: Health Connect permission (glucose only), companion source + notification access,
